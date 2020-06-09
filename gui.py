@@ -1,4 +1,5 @@
 import sys
+from recipe import Recipe
 
 from PySide2.QtWidgets import (QMainWindow, QWidget, QLabel, QFormLayout, QLineEdit, QPushButton,
     QGroupBox, QTableWidget, QVBoxLayout, QHBoxLayout, QApplication, QGridLayout, QTableWidgetItem)
@@ -13,7 +14,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Recipe Genius")
         self.mainWidget = QWidget()
         self.setCentralWidget(self.mainWidget)
-        self.ingredientList = list()
+        self.ingredientList = set()
 
         # images
         self.title = QLabel("No recipe loaded")
@@ -35,6 +36,7 @@ class MainWindow(QMainWindow):
         self.ingredientTable.setColumnCount(1)
         self.ingredientTable.setHorizontalHeaderLabels(["Ingredients list"])
         self.submitButton = QPushButton("Submit ingredients")
+        self.submitButton.clicked.connect(self.submitIngredients)
 
         # left layout (adding ingredients)
         self.leftLayout = QVBoxLayout()
@@ -45,11 +47,11 @@ class MainWindow(QMainWindow):
         # bottom right layout (recipe tables)
         self.usedTable = QTableWidget()
         self.usedTable.setColumnCount(3)
-        self.usedTable.setHorizontalHeaderLabels(["Used ingredients", "Amount", "Unit"])
+        self.usedTable.setHorizontalHeaderLabels(["Used ingredient", "Amount", "Unit"])
         
         self.missedTable = QTableWidget()
         self.missedTable.setColumnCount(3)
-        self.missedTable.setHorizontalHeaderLabels(["Missed ingredients", "Amount", "Unit"])
+        self.missedTable.setHorizontalHeaderLabels(["Missed ingredient", "Amount", "Unit"])
 
         self.bottomRightLayout = QHBoxLayout()
         self.bottomRightLayout.addWidget(self.usedTable)
@@ -72,17 +74,31 @@ class MainWindow(QMainWindow):
     # functions
     def addIngredient(self):
         ingredient = self.ingredientInput.text().strip().lower()
-        self.ingredientList.append(ingredient)
-        rowIndex = self.ingredientTable.rowCount()
-        self.ingredientTable.insertRow(rowIndex)
-        self.ingredientTable.setItem(rowIndex, 0, QTableWidgetItem(ingredient))
+        if ingredient not in self.ingredientList:
+            rowIndex = self.ingredientTable.rowCount()
+            self.ingredientTable.insertRow(rowIndex)
+            self.ingredientTable.setItem(rowIndex, 0, QTableWidgetItem(ingredient))
+            self.ingredientList.add(ingredient)
+        self.ingredientInput.clear()
+
+    def submitIngredients(self):
+        self.ingredientTable.setRowCount(0)
+        recipe = Recipe.get_top_recipe_by_ingredients(self.ingredientList)
+        self.ingredientList.clear()
+        self.processRecipe(recipe)
 
     def processRecipe(self, recipe):
-        self.title.setText(recipe.title)
-        self.pixmap.loadFromData(recipe.image)
-        self.image.setPixmap(self.pixmap)
-        self.insertIngredients(self.usedTable, recipe.used_ingredients)
-        self.insertIngredients(self.missedTable, recipe.missed_ingredients)
+        self.usedTable.setRowCount(0)
+        self.missedTable.setRowCount(0)
+        if recipe is None:
+            self.title.setText("No recipe found. Please try again.")
+            self.image.setText(" ")
+        else:
+            self.title.setText(recipe.title)
+            self.pixmap.loadFromData(recipe.image)
+            self.image.setPixmap(self.pixmap)
+            self.insertIngredients(self.usedTable, recipe.used_ingredients)
+            self.insertIngredients(self.missedTable, recipe.missed_ingredients)
 
     def insertIngredients(self, table, ingredients):
         rowIndex = table.rowCount()

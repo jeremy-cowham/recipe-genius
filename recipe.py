@@ -42,18 +42,15 @@ class Recipe:
         else:
             data = None
         
-        print("data back:", data)
         if data:
             recipe = data[0]
             id = recipe['id']
             title = recipe['title']
             image_url = recipe['image']
-            print("getting url:", image_url)
             image = requests.get(image_url).content
 
             used_ingredients = list()
             for ingredient in recipe['usedIngredients']:
-                print("used ingredient:", ingredient)
                 used_ingredients.append(Ingredient(
                     id=ingredient['id'],
                     name=ingredient['name'],
