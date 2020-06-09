@@ -27,9 +27,13 @@ Lastly, you'll need to sign-up for a *spoonacular* account: https://spoonacular.
 The `pipenv install` command may take awhile to run. Please be patient. If you would like to speed it up, but lose GUI functionality, you may comment out the `PySide2` dependency in `Pipfile`:
 
 ```
+  ...
+
   [packages]
   requests = "*"
   # pyside2 = "*"
+
+  ...
 ```
 
 and delete `Pipfile.lock`. Rerun:
@@ -40,7 +44,7 @@ and delete `Pipfile.lock`. Rerun:
 
 ## Tutorial
 
-*Recipe Genius* lets users search for recipes matching the ingredients they provide. It supports both a command-line interface and a GUI inferface. On Mac, get help by running:
+*Recipe Genius* lets users search for recipes matching the ingredients they provide. It supports both a command-line interface and a GUI inferface. Get help by running:
 
 ```bash
   python main.py -help
@@ -55,5 +59,5 @@ Here's an example command to start the application:
 This will start the command-line interface. To start the GUI, simply add the `-gui` flag:
 
 ```bash
-  python main.py -ingredients garlic,butter -file ingredients_lists/list.txt -g
+  python main.py -ingredients garlic,butter -file ingredients_lists/list.txt -gui
 ```
