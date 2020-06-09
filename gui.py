@@ -6,7 +6,7 @@ from PySide2.QtGui import QPixmap
 
 class MainWindow(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, recipe):
         super().__init__()
 
         # setup
@@ -16,8 +16,9 @@ class MainWindow(QMainWindow):
         self.ingredientList = list()
 
         # images
+        self.title = QLabel("No recipe loaded")
         self.pixmap = QPixmap()
-        self.image = QLabel("No recipe loaded")
+        self.image = QLabel("No picture loaded")
 
         # ingredient form
         self.formBox = QGroupBox("Enter ingredients")
@@ -44,11 +45,11 @@ class MainWindow(QMainWindow):
         # bottom right layout (recipe tables)
         self.usedTable = QTableWidget()
         self.usedTable.setColumnCount(3)
-        self.usedTable.setHorizontalHeaderLabels(["Used ingredients", "Amount", "Units"])
+        self.usedTable.setHorizontalHeaderLabels(["Used ingredients", "Amount", "Unit"])
         
         self.missedTable = QTableWidget()
         self.missedTable.setColumnCount(3)
-        self.missedTable.setHorizontalHeaderLabels(["Missed ingredients", "Amount", "Units"])
+        self.missedTable.setHorizontalHeaderLabels(["Missed ingredients", "Amount", "Unit"])
 
         self.bottomRightLayout = QHBoxLayout()
         self.bottomRightLayout.addWidget(self.usedTable)
@@ -56,6 +57,7 @@ class MainWindow(QMainWindow):
 
         # right layout (recipe)
         self.rightLayout = QVBoxLayout()
+        self.rightLayout.addWidget(self.title)
         self.rightLayout.addWidget(self.image)
         self.rightLayout.addLayout(self.bottomRightLayout)
 
@@ -65,6 +67,8 @@ class MainWindow(QMainWindow):
         self.mainLayout.addLayout(self.rightLayout, 0, 2, 1, 1)
         self.centralWidget().setLayout(self.mainLayout)
 
+        self.processRecipe(recipe)
+
     # functions
     def addIngredient(self):
         ingredient = self.ingredientInput.text().strip().lower()
@@ -73,8 +77,27 @@ class MainWindow(QMainWindow):
         self.ingredientTable.insertRow(rowIndex)
         self.ingredientTable.setItem(rowIndex, 0, QTableWidgetItem(ingredient))
 
-if __name__ == '__main__':
+    def processRecipe(self, recipe):
+        self.title.setText(recipe.title)
+        self.pixmap.loadFromData(recipe.image)
+        self.image.setPixmap(self.pixmap)
+        self.insertIngredients(self.usedTable, recipe.used_ingredients)
+        self.insertIngredients(self.missedTable, recipe.missed_ingredients)
+
+    def insertIngredients(self, table, ingredients):
+        rowIndex = table.rowCount()
+        for ingredient in ingredients:
+            table.insertRow(rowIndex)
+            table.setItem(rowIndex, 0, QTableWidgetItem(ingredient.name))
+            table.setItem(rowIndex, 1, QTableWidgetItem(str(ingredient.amount)))
+            table.setItem(rowIndex, 2, QTableWidgetItem(ingredient.unit))
+            rowIndex += 1
+
+def runGui(recipe=None):
     app = QApplication(sys.argv)
-    mainWindow = MainWindow()
+    mainWindow = MainWindow(recipe)
     mainWindow.showNormal()
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    runGui()

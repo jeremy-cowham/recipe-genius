@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from recipe import Recipe
+from gui import runGui
 
 # options to
 #   - call main.py directly with ingredients as command-line arg
@@ -17,10 +18,17 @@ def main(args):
             for line in f.readlines():
                 to_add = {i.strip().lower() for i in line.split(',')}
                 ingredients.update(to_add)
+
+    if ingredients:
+        recipe = Recipe.get_top_recipe_by_ingredients(ingredients)
+    else:
+        recipe = None
+        
     if args.gui:
-        print("gui!")
-    print('ingredients:', ingredients)
-    Recipe.get_top_recipe_by_ingredients(ingredients)
+        runGui(recipe)
+    else:
+        print("Starting command-line interface")
+
 
 if __name__ == '__main__':
     parser = ArgumentParser(description="Helpful recipe finder for the ingredients you have.")

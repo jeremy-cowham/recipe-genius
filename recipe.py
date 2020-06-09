@@ -1,14 +1,15 @@
 import requests
 import os
+import urllib
 
 class Recipe:
 
     INGREDIENTS_ENDPOINT = "https://api.spoonacular.com/recipes/findByIngredients"
 
-    def __init__(self, id, title, image_url, used_ingredients, missed_ingredients):
+    def __init__(self, id, title, image, used_ingredients, missed_ingredients):
         self.id = id
         self.title = title
-        self.image_url = image_url
+        self.image = image
         self.used_ingredients = used_ingredients
         self.missed_ingredients = missed_ingredients
 
@@ -38,18 +39,26 @@ class Recipe:
         response = requests.get(url=Recipe.INGREDIENTS_ENDPOINT, params=PARAMS)
         if response.ok:
             data = response.json()
+        else:
+            data = None
+        
+        print("data back:", data)
+        if data:
             recipe = data[0]
             id = recipe['id']
             title = recipe['title']
             image_url = recipe['image']
+            print("getting url:", image_url)
+            image = requests.get(image_url).content
 
             used_ingredients = list()
             for ingredient in recipe['usedIngredients']:
+                print("used ingredient:", ingredient)
                 used_ingredients.append(Ingredient(
                     id=ingredient['id'],
                     name=ingredient['name'],
                     amount=ingredient['amount'],
-                    units=ingredient['units']
+                    unit=ingredient['unit']
                 ))
 
             missed_ingredients = list()
@@ -58,13 +67,13 @@ class Recipe:
                     id=ingredient['id'],
                     name=ingredient['name'],
                     amount=ingredient['amount'],
-                    units=ingredient['units']
+                    unit=ingredient['unit']
                 ))
 
             return Recipe(
                 id=id,
                 title=title,
-                image_url=image_url,
+                image=image,
                 used_ingredients=used_ingredients,
                 missed_ingredients=missed_ingredients
             )
@@ -73,8 +82,8 @@ class Recipe:
 
 class Ingredient:
 
-    def __init__(self, id, name, amount, units):
+    def __init__(self, id, name, amount, unit):
         self.id = id
         self.name = name
         self.amount = amount
-        self.units = units
+        self.unit = unit
