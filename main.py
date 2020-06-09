@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from recipe import Recipe
 
 # options to
 #   - call main.py directly with ingredients as command-line arg
@@ -13,6 +14,7 @@ def main(args):
         print("file!")
     if args.gui:
         print("gui!")
+    Recipe.get_top_recipe_by_ingredients(['eggs', 'chocolate', 'butter'])
 
 if __name__ == '__main__':
     parser = ArgumentParser(description="Helpful recipe finder for the ingredients you have.")
