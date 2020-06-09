@@ -23,12 +23,50 @@ def main(args):
         recipe = Recipe.get_top_recipe_by_ingredients(ingredients)
     else:
         recipe = None
-        
+
     if args.gui:
         runGui(recipe)
     else:
-        print("Starting command-line interface")
+        print()
+        run_command_line_interface(recipe)
 
+def run_command_line_interface(recipe):
+    ingredients = set()
+    if recipe is None:
+        ingredient = input("Please enter an ingredient: ").strip().lower()
+        ingredients.add(ingredient)
+        print("Your ingredients list:", ingredients)
+        ingredient = input("Please enter another ingredient or 'done': ")
+        while ingredient != 'done':
+            ingredients.add(ingredient)
+            print("Your ingredients list:", ingredients)
+            ingredient = input("Please enter another ingredient or 'done': ")
+        print("Submitting ingredients for recipe...\n")
+        recipe = Recipe.get_top_recipe_by_ingredients(ingredients)
+        if recipe is None:
+            print("Unfortunately we couldn't find a recipe for the ingredients provided.")
+            print("Please check your spelling and try again.\n")
+        run_command_line_interface(recipe)
+    else:
+        print(f"We would recommend {recipe.title}!\n")
+        print_ingredients("This dish would use:\n", recipe.used_ingredients)
+        print_ingredients("However, this dish would also require:\n", recipe.missed_ingredients)
+
+        again = input("Would you like to search for another recipe? (yes/no) ").strip().lower()
+        while again not in {'yes', 'no'}:
+            again = input("Please enter 'yes' or 'no'. Would you like to search for another recipe? ").strip().lower()
+        if again == 'yes':
+            print()
+            run_command_line_interface(None)
+
+def print_ingredients(prefix, ingredients):
+    to_print = prefix
+    for item in ingredients:
+        if item.unit:
+            to_print += f"  - {item.amount} {item.unit} of {item.name}\n"
+        else:
+            to_print += f"  - {item.amount} {item.name}\n"
+    print(to_print)
 
 if __name__ == '__main__':
     parser = ArgumentParser(description="Helpful recipe finder for the ingredients you have.")
