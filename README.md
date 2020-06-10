@@ -4,7 +4,7 @@ Lightweight application for finding the best recipes for the ingredients you hav
 
 ## Quickstart
 
-Clone this repository to the desired location on your machine. I assume you have Python 3.7 installed on your machine. First, you'll need `pipenv` to install the required dependecies:
+Clone this repository to the desired location on your machine. I assume you have Python 3.7 installed on your machine. First, you'll need `pipenv` to install the required dependencies:
 
 ```bash
   pip install pipenv
@@ -18,36 +18,14 @@ Next, navigate to the root directory of *Recipe Genius*. Install the default dep
   pipenv install
 ```
 
-If this takes too long, see **Faster install**.
+This may take a minute or two.
 
 Lastly, you'll need to sign-up for a *spoonacular* account: https://spoonacular.com/food-api/console. You should enter your API key in the `.env` file. Run:
 
 ```bash
   pipenv shell  # activates virtual environment
 ```
-For instructions on using the application, please see **Tutorial**.
-
-## Faster install
-
-The `pipenv install` command may take awhile to run. If you would like to speed it up, but lose GUI functionality, you may comment out the `PySide2` dependency in `Pipfile`:
-
-```
-  ...
-
-  [packages]
-  requests = "*"
-  # pyside2 = "*"
-
-  ...
-```
-
-and delete `Pipfile.lock`. Rerun:
-
-```bash
-  pipenv install
-```
-
-**Note:** The `-gui` flag will no longer work without `PySide2` installed.
+You are now ready to start using *Recipe Genius*! For a tutorial on getting started, please see below.
 
 ## Tutorial
 
@@ -81,10 +59,10 @@ or both:
   python main.py -ingredients garlic,butter -file ingredient_lists/list.txt
 ```
 
-By default, it runs the command-line interface. To start the GUI, simply add the `-gui` flag:
+By default, this will run the command-line interface. To start the GUI, simply add the `-gui` flag:
 
 ```bash
   python main.py -ingredients garlic,butter -file ingredient_lists/list.txt -gui
 ```
 
-That's it! Bon appetit!
+Bon appetit!
