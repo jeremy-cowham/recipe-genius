@@ -32,7 +32,7 @@ You are now ready to start using *Recipe Genius*! For a tutorial on getting star
 *Recipe Genius* lets users search for recipes matching the ingredients they provide. It supports both a command-line interface and a GUI. Get help by running:
 
 ```bash
-  python main.py -help
+  python main.py --help
 ```
 
 Here's an example command to start the application:
