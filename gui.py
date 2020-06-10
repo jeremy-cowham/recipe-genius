@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
     # functions
     def addIngredient(self):
         ingredient = self.ingredientInput.text().strip().lower()
-        if ingredient not in self.ingredientList:
+        if ingredient and ingredient not in self.ingredientList:
             rowIndex = self.ingredientTable.rowCount()
             self.ingredientTable.insertRow(rowIndex)
             self.ingredientTable.setItem(rowIndex, 0, QTableWidgetItem(ingredient))

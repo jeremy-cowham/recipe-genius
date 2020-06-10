@@ -1,6 +1,5 @@
 import requests
 import os
-import urllib
 
 class Recipe:
 

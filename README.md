@@ -20,11 +20,16 @@ Next, navigate to the root directory of *Recipe Genius*. Install the default dep
 
 If this takes too long, see **Faster install**.
 
-Lastly, you'll need to sign-up for a *spoonacular* account: https://spoonacular.com/food-api/console. You should enter your API key in the `.env` file. For instructions on using the application, please see **Tutorial**.
+Lastly, you'll need to sign-up for a *spoonacular* account: https://spoonacular.com/food-api/console. You should enter your API key in the `.env` file. Run:
+
+```bash
+  pipenv shell  # activates virtual environment
+```
+For instructions on using the application, please see **Tutorial**.
 
 ## Faster install
 
-The `pipenv install` command may take awhile to run. Please be patient. If you would like to speed it up, but lose GUI functionality, you may comment out the `PySide2` dependency in `Pipfile`:
+The `pipenv install` command may take awhile to run. If you would like to speed it up, but lose GUI functionality, you may comment out the `PySide2` dependency in `Pipfile`:
 
 ```
   ...
@@ -42,9 +47,11 @@ and delete `Pipfile.lock`. Rerun:
   pipenv install
 ```
 
+**Note:** The `-gui` flag will no longer work without `PySide2` installed.
+
 ## Tutorial
 
-*Recipe Genius* lets users search for recipes matching the ingredients they provide. It supports both a command-line interface and a GUI inferface. Get help by running:
+*Recipe Genius* lets users search for recipes matching the ingredients they provide. It supports both a command-line interface and a GUI. Get help by running:
 
 ```bash
   python main.py -help
@@ -53,11 +60,31 @@ and delete `Pipfile.lock`. Rerun:
 Here's an example command to start the application:
 
 ```bash
-  python main.py -ingredients garlic,butter -file ingredients_lists/list.txt
+  python main.py
 ```
 
-This will start the command-line interface. To start the GUI, simply add the `-gui` flag:
+You can also read ingredients right from the command line:
 
 ```bash
-  python main.py -ingredients garlic,butter -file ingredients_lists/list.txt -gui
+  python main.py -ingredients garlic,butter
 ```
+
+or from a `.txt` (one ingredient per line) or `.csv` file:
+
+```bash
+  python main.py -file ingredient_lists/list.txt
+```
+
+or both:
+
+```bash
+  python main.py -ingredients garlic,butter -file ingredient_lists/list.txt
+```
+
+By default, it runs the command-line interface. To start the GUI, simply add the `-gui` flag:
+
+```bash
+  python main.py -ingredients garlic,butter -file ingredient_lists/list.txt -gui
+```
+
+That's it! Bon appetit!

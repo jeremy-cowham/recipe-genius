@@ -2,12 +2,16 @@ from argparse import ArgumentParser
 from recipe import Recipe
 from gui import runGui
 
-# options to
+# options for user to:
 #   - call main.py directly with ingredients as command-line arg
 #   - pass a CSV file or file of newline-separated ingredients as command-line arg
-#   - use a user interface to enter ingredients one-by-one with intermediate feedback
+#   - use an interface to enter ingredients one-by-one with intermediate feedback
 
 def main(args):
+    '''
+    Main function which sends an initial request (if any) and dispatches either the
+    command-line interface or the GUI.
+    '''
     ingredients = set()
     if args.ingredients:
         # ingredients split, surrounding whitespace stripped, and coverted to lower case
@@ -23,6 +27,7 @@ def main(args):
         recipe = Recipe.get_top_recipe_by_ingredients(ingredients)
     else:
         recipe = None
+    # recipe will be None if no ingredients were provided or no result was returned
 
     if args.gui:
         runGui(recipe)
@@ -31,14 +36,19 @@ def main(args):
         run_command_line_interface(recipe)
 
 def run_command_line_interface(recipe):
+    '''
+    Recursive command-line interface for searching for dishes by ingredients.
+    '''
     ingredients = set()
     if recipe is None:
         ingredient = input("Please enter an ingredient: ").strip().lower()
-        ingredients.add(ingredient)
+        if ingredient:
+            ingredients.add(ingredient)
         print("Your ingredients list:", ingredients)
         ingredient = input("Please enter another ingredient or 'done': ")
         while ingredient != 'done':
-            ingredients.add(ingredient)
+            if ingredient:
+                ingredients.add(ingredient)
             print("Your ingredients list:", ingredients)
             ingredient = input("Please enter another ingredient or 'done': ")
         print("Submitting ingredients for recipe...\n")
@@ -60,6 +70,9 @@ def run_command_line_interface(recipe):
             run_command_line_interface(None)
 
 def print_ingredients(prefix, ingredients):
+    '''
+    Helper function which prints ingredients to command-line terminal.
+    '''
     to_print = prefix
     for item in ingredients:
         if item.unit:
@@ -68,7 +81,9 @@ def print_ingredients(prefix, ingredients):
             to_print += f"  - {item.amount} {item.name}\n"
     print(to_print)
 
+
 if __name__ == '__main__':
+    # parse arguments
     parser = ArgumentParser(description="Helpful recipe finder for the ingredients you have.")
     parser.add_argument('-ingredients', '-i',
         type=str,
@@ -83,4 +98,5 @@ if __name__ == '__main__':
         help="Flag for activating GUI pop-up",
         default=False)
     args = parser.parse_args()
+    # use arguments to call main function
     main(args)
