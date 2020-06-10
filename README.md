@@ -20,7 +20,7 @@ pipenv install
 
 This may take a minute or two.
 
-Lastly, you'll need to sign-up for a *spoonacular* account: https://spoonacular.com/food-api/console. You should enter your API key in the `.env` file. Run:
+Lastly, you'll need to sign up for a *spoonacular* account: https://spoonacular.com/food-api/console. You should enter your API key in the `.env` file. Run:
 
 ```bash
 pipenv shell  # activates virtual environment
